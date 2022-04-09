@@ -83,8 +83,8 @@ def sample_level(zs, labels, sampling_kwargs, level, prior, total_length, hop_le
     if total_length >= prior.n_ctx:
         for start in get_starts(total_length, prior.n_ctx, hop_length):
             zs = sample_single_window(zs, labels, sampling_kwargs, level, prior, start, hps)
-    else:
-        zs = sample_partial_window(zs, labels, sampling_kwargs, level, prior, total_length, hps)
+    # else:
+        #zs = sample_partial_window(zs, labels, sampling_kwargs, level, prior, total_length, hps)
     return zs
 
 # Sample multiple levels
@@ -99,7 +99,12 @@ def _sample(zs, labels, sampling_kwargs, priors, sample_levels, hps):
         assert hps.sample_length % prior.raw_to_tokens == 0, f"Expected sample_length {hps.sample_length} to be multiple of {prior.raw_to_tokens}"
         total_length = hps.sample_length//prior.raw_to_tokens
         # hop_length = int(hps.hop_fraction[level]*prior.n_ctx)
-        zs = sample_level(zs, labels[level], sampling_kwargs[level], level, prior, total_length, 1, hps)
+        
+        
+        if hps.hop_fraction[level] == 2 and level != hps.levels - 1:
+            zs = sample_level(zs, labels[level], sampling_kwargs[level], level, prior, total_length, int(hps.hop_fraction[level]*prior.n_ctx), hps)
+        else:
+            zs = sample_level(zs, labels[level], sampling_kwargs[level], level, prior, total_length, 1, hps)
 
         prior.cpu()
         empty_cache()
