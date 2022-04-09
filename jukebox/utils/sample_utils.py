@@ -15,8 +15,8 @@ def split_batch(obj, n_samples, split_size):
 def get_starts(total_length, n_ctx, hop_length):
     starts = []
     for start in range(0, total_length - n_ctx + hop_length, hop_length):
-        if start + n_ctx >= total_length:
+        #if start + n_ctx >= total_length:
             # Last hop could be smaller, we make it n_ctx to maximise context
-            start = total_length - n_ctx
+            # start = total_length - n_ctx
         starts.append(start)
     return starts
