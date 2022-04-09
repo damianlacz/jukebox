@@ -33,7 +33,7 @@ def sample_single_window(zs, labels, sampling_kwargs, level, prior, start, hps):
     
     if level != hps.levels - 1:
         n_ctx = prior.n_ctx
-    elif hps.hop_fraction[level] == 1:
+    else:
         n_ctx = 8192
     
     end = start + n_ctx
