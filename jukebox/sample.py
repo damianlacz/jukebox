@@ -98,8 +98,8 @@ def _sample(zs, labels, sampling_kwargs, priors, sample_levels, hps):
         # Set correct total_length, hop_length, labels and sampling_kwargs for level
         assert hps.sample_length % prior.raw_to_tokens == 0, f"Expected sample_length {hps.sample_length} to be multiple of {prior.raw_to_tokens}"
         total_length = hps.sample_length//prior.raw_to_tokens
-        hop_length = int(hps.hop_fraction[level]*prior.n_ctx)
-        zs = sample_level(zs, labels[level], sampling_kwargs[level], level, prior, total_length, hop_length, hps)
+        # hop_length = int(hps.hop_fraction[level]*prior.n_ctx)
+        zs = sample_level(zs, labels[level], sampling_kwargs[level], level, prior, total_length, 1, hps)
 
         prior.cpu()
         empty_cache()
