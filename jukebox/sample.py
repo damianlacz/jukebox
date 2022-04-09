@@ -30,8 +30,7 @@ def sample_partial_window(zs, labels, sampling_kwargs, level, prior, tokens_to_s
 # Sample a single window of length=n_ctx at position=start on level=level
 def sample_single_window(zs, labels, sampling_kwargs, level, prior, start, hps):
     n_samples = hps.n_samples
-    
-    n_ctx = 8192 # prior.n_ctx
+    n_ctx = prior.n_ctx
     
     end = start + n_ctx
     
