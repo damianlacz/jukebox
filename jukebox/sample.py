@@ -30,12 +30,7 @@ def sample_partial_window(zs, labels, sampling_kwargs, level, prior, tokens_to_s
 # Sample a single window of length=n_ctx at position=start on level=level
 def sample_single_window(zs, labels, sampling_kwargs, level, prior, start, hps):
     n_samples = hps.n_samples
-    #n_ctx = prior.n_ctx
-    
-    if level != hps.levels - 1:
-        n_ctx = 8192
-    else:
-        n_ctx = prior.n_ctx
+    n_ctx = prior.n_ctx
     
     end = start + n_ctx
     
@@ -106,7 +101,10 @@ def _sample(zs, labels, sampling_kwargs, priors, sample_levels, hps):
         total_length = hps.sample_length//prior.raw_to_tokens
         # hop_length = int(hps.hop_fraction[level]*prior.n_ctx)
         
-        zs = sample_level(zs, labels[level], sampling_kwargs[level], level, prior, total_length, int(hps.hop_fraction[level]*prior.n_ctx), hps)
+        if level == hps.levels - 1:
+            zs = sample_level(zs, labels[level], sampling_kwargs[level], level, prior, total_length, int(hps.hop_fraction[level]*prior.n_ctx), hps)
+        else:
+            zs = sample_level(zs, labels[level], sampling_kwargs[level], level, prior, total_length, int(8192*hps.hop_fraction[level]), hps)
         
         prior.cpu()
         empty_cache()
