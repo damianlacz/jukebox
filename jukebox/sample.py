@@ -101,10 +101,7 @@ def _sample(zs, labels, sampling_kwargs, priors, sample_levels, hps):
         total_length = hps.sample_length//prior.raw_to_tokens
         # hop_length = int(hps.hop_fraction[level]*prior.n_ctx)
         
-        if level == hps.levels - 1:
-            zs = sample_level(zs, labels[level], sampling_kwargs[level], level, prior, total_length, int(hps.hop_fraction[level]*prior.n_ctx), hps)
-        else:
-            zs = sample_level(zs, labels[level], sampling_kwargs[level], level, prior, total_length, int(8192*hps.hop_fraction[level]), hps)
+        zs = sample_level(zs, labels[level], sampling_kwargs[level], level, prior, total_length, int(hps.hop_fraction[level]*prior.n_ctx), hps)
         
         prior.cpu()
         empty_cache()
