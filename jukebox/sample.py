@@ -142,24 +142,23 @@ def _sample(zs, labels, sampling_kwargs, priors, sample_levels, hps):
         t.save(dict(zs=zs, labels=labels, sampling_kwargs=sampling_kwargs, x=x), f"{logdir}/data.pth.tar")
         save_wav(logdir, x, hps.sr)
 
-        # make alignment file - turn it off if low mem
-        if sampling_kwargs[level]['exportlyrics']:
-            if alignments is None and priors[-1] is not None and priors[-1].n_tokens > 0 and not isinstance(priors[-1].labeller, EmptyLabeller):
-                alignments = get_alignment(x, zs, labels[-1], priors[-1], sampling_kwargs[-1]['fp16'], hps)
+        #if sampling_kwargs[level]['exportlyrics']:
+        #if alignments is None and priors[-1] is not None and priors[-1].n_tokens > 0 and not isinstance(priors[-1].labeller, EmptyLabeller):
+            #alignments = get_alignment(x, zs, labels[-1], priors[-1], sampling_kwargs[-1]['fp16'], hps)
         
         # renaming items
-        if sampling_kwargs[level]['autorename']:
-            lepath=hps.name
-            if level==2:
-              for filex in glob(os.path.join(lepath + '/level_2','item_*.wav')):
+        #if sampling_kwargs[level]['autorename']:
+        lepath=hps.name
+        if level==2:
+            for filex in glob(os.path.join(lepath + '/level_2','item_*.wav')):
                 os.rename(filex,filex.replace('item_',lepath.split('/')[-1] + '-'))
-            if level==1:
-              for filex in glob(os.path.join(lepath + '/level_1','item_*.wav')):
+        if level==1:
+            for filex in glob(os.path.join(lepath + '/level_1','item_*.wav')):
                 os.rename(filex,filex.replace('item_',lepath.split('/')[-1] + '-L1-'))
-            if level==0:
-              for filex in glob(os.path.join(lepath + '/level_0','item_*.wav')):
+        if level==0:
+            for filex in glob(os.path.join(lepath + '/level_0','item_*.wav')):
                 os.rename(filex,filex.replace('item_',lepath.split('/')[-1] + '-L0-'))
-            save_html(logdir, x, zs, labels[-1], alignments, hps)
+        save_html(logdir, x, zs, labels[-1], alignments, hps)
     return zs
 
 # Generate ancestral samples given a list of artists and genres
